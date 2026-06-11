@@ -183,7 +183,7 @@ function updateUI(data) {
     const isNight = data.dt < data.sys.sunrise || data.dt > data.sys.sunset;
     
     updateWeatherIcon(weatherCondition, isNight);
-    updateBackgroundTheme(weatherCondition, isNight);
+    updateBackgroundTheme(data.name, weatherCondition, isNight);
 }
 
 // --- Helper: Local Time Formatter ---
@@ -230,38 +230,76 @@ function updateWeatherIcon(weatherCondition, isNight) {
 }
 
 // --- Helper: Dynamic Background Theme Cross-fade ---
-function updateBackgroundTheme(weatherCondition, isNight) {
+function updateBackgroundTheme(city, weatherCondition, isNight) {
     let themeClass = 'theme-default';
+    let queryTags = [];
+    
+    // 1. Determine fallback theme class
     const cond = weatherCondition.toLowerCase();
-
     if (isNight) {
         themeClass = 'theme-night';
+        queryTags.push('night');
     } else {
         if (cond === 'clear') {
             themeClass = 'theme-clear';
+            queryTags.push('sunny');
         } else if (cond === 'clouds') {
             themeClass = 'theme-clouds';
+            queryTags.push('cloudy');
         } else if (['rain', 'drizzle'].includes(cond)) {
             themeClass = 'theme-rain';
+            queryTags.push('rainy');
         } else if (cond === 'thunderstorm') {
             themeClass = 'theme-thunder';
+            queryTags.push('storm');
         } else if (cond === 'snow') {
             themeClass = 'theme-snow';
+            queryTags.push('snowy');
         } else if (['mist', 'smoke', 'haze', 'dust', 'fog', 'sand', 'ash', 'squall', 'tornado'].includes(cond)) {
             themeClass = 'theme-mist';
+            queryTags.push('foggy');
+        } else {
+            queryTags.push('weather');
         }
     }
+
+    // 2. Add clean city name to tags if present
+    if (city) {
+        const cleanCity = city.split(',')[0].trim().toLowerCase();
+        queryTags.unshift(cleanCity); // place city name as primary keyword
+    }
+
+    // 3. Build dynamic search URL
+    const tagString = queryTags.join(',');
+    const imageUrl = `https://loremflickr.com/1920/1080/${tagString}`;
 
     // Determine active and inactive background layers
     const activeLayer = bgLayer1.classList.contains('active') ? bgLayer1 : bgLayer2;
     const inactiveLayer = activeLayer === bgLayer1 ? bgLayer2 : bgLayer1;
 
-    // Set theme on the inactive layer first
-    inactiveLayer.className = `bg-transition ${themeClass}`;
+    // Reset background-image property to let theme fallback gradients take over if loading
+    inactiveLayer.className = 'bg-transition';
+
+    // Preload the photorealistic dynamic location-specific image
+    const img = new Image();
+    img.src = imageUrl;
+    img.onload = () => {
+        // Apply the loaded image on top of fallback theme classes
+        inactiveLayer.style.backgroundImage = `url('${imageUrl}')`;
+        inactiveLayer.classList.add(themeClass);
+        
+        // Trigger transition cross-fade
+        inactiveLayer.classList.add('active');
+        activeLayer.classList.remove('active');
+    };
     
-    // Toggle active state to trigger cross-fade
-    inactiveLayer.classList.add('active');
-    activeLayer.classList.remove('active');
+    img.onerror = () => {
+        // Fallback to static gradient theme if image download fails
+        inactiveLayer.style.backgroundImage = '';
+        inactiveLayer.classList.add(themeClass);
+        inactiveLayer.classList.add('active');
+        activeLayer.classList.remove('active');
+    };
 }
 
 // --- Local Storage Search History ---
