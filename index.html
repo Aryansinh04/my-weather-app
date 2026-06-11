@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyFlow | Premium Live Weather</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Smooth Background Transition Elements -->
+    <div id="bg-layer-1" class="bg-transition theme-default active"></div>
+    <div id="bg-layer-2" class="bg-transition"></div>
+
+    <div class="app-container">
+        
+        <!-- Header Actions: Geolocation & Metric Toggle -->
+        <div class="header-actions">
+            <button id="geo-btn" class="action-btn" title="Use Current Location">
+                <i class="fa-solid fa-location-crosshairs"></i>
+            </button>
+            
+            <div class="unit-toggle" id="unit-toggle-container">
+                <button class="unit-btn active" id="unit-c">°C</button>
+                <button class="unit-btn" id="unit-f">°F</button>
+            </div>
+        </div>
+
+        <!-- Search Input Section -->
+        <div class="search-box">
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" id="city-input" placeholder="Search city..." value="Paris">
+            <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <!-- Error Notification Banner -->
+        <div class="error-banner" id="error-banner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="error-message">City not found! Please check spelling.</span>
+        </div>
+
+        <!-- Recent Cities History Chips -->
+        <div class="recent-searches" id="recent-searches">
+            <!-- Chips will load dynamically here -->
+        </div>
+
+        <!-- Main Display for Selected City -->
+        <div class="weather-main">
+            <div class="weather-icon-wrapper" id="weather-icon-container">
+                <i class="fa-solid fa-cloud-sun"></i>
+            </div>
+            <h1 class="temperature" id="temp">--°C</h1>
+            <p class="description" id="desc">Loading weather...</p>
+            <p class="location" id="location-name">
+                <i class="fa-solid fa-location-arrow"></i> <span>City, Country</span>
+            </p>
+        </div>
+
+        <!-- Comprehensive Weather Stats Grid (2x3) -->
+        <div class="weather-details">
+            <!-- Feels Like -->
+            <div class="detail-box">
+                <i class="fa-solid fa-temperature-half"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="feels-like">--°</span>
+                    <p class="detail-label">Feels Like</p>
+                </div>
+            </div>
+            
+            <!-- Humidity -->
+            <div class="detail-box">
+                <i class="fa-solid fa-droplet"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="humidity">--%</span>
+                    <p class="detail-label">Humidity</p>
+                </div>
+            </div>
+
+            <!-- Wind Speed & Direction -->
+            <div class="detail-box">
+                <i class="fa-solid fa-wind"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="wind">-- km/h</span>
+                    <p class="detail-label">Wind Speed</p>
+                </div>
+            </div>
+
+            <!-- Pressure -->
+            <div class="detail-box">
+                <i class="fa-solid fa-gauge"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="pressure">-- hPa</span>
+                    <p class="detail-label">Pressure</p>
+                </div>
+            </div>
+
+            <!-- Visibility -->
+            <div class="detail-box">
+                <i class="fa-solid fa-eye"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="visibility">-- km</span>
+                    <p class="detail-label">Visibility</p>
+                </div>
+            </div>
+
+            <!-- Sun Cycle (Sunrise / Sunset) -->
+            <div class="detail-box">
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                <div class="detail-info">
+                    <span class="detail-value" id="sun-cycle">-- / --</span>
+                    <p class="detail-label">Sun Cycle</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
